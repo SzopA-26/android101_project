@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/headDark"
+    android:orientation="vertical"
+    tools:context=".NewActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/headTextHeight">
+
+        <TextView
+            android:id="@+id/doneBtnText"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:text="Done"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/backBtnText"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:text="Back"
+            android:textColor="@color/orange"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:text="New"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fullHeight"
+        android:background="@color/mainDark">
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#fff"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/nameTaskText"
+            android:layout_width="@dimen/itemWidth"
+            android:layout_height="@dimen/selectTabHeight"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/rounded_square_solid"
+            android:ems="10"
+            android:hint="Name of the task"
+            android:inputType="textPersonName"
+            android:paddingLeft="@dimen/selectTextPadding"
+            android:paddingRight="@dimen/selectTextPadding"
+            android:textColor="@color/white"
+            android:textColorHint="@color/textGray"
+            android:textSize="@dimen/selectTextSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iconImg"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/selectTabHeight"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_square_solid"
+            android:src="@drawable/i01"
+            app:layout_constraintStart_toStartOf="@+id/nameTaskText"
+            app:layout_constraintTop_toBottomOf="@+id/nameTaskText"
+            app:tint="@color/orange" />
+
+        <TextView
+            android:id="@+id/iconText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:text="icon"
+            android:textColor="@color/white"
+            android:textSize="@dimen/selectTextSize"
+            app:layout_constraintBottom_toBottomOf="@+id/iconImg"
+            app:layout_constraintStart_toEndOf="@+id/iconImg"
+            app:layout_constraintTop_toTopOf="@+id/iconImg" />
+
+        <ImageView
+            android:id="@+id/colorImg"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/selectTabHeight"
+            android:layout_marginStart="160dp"
+            android:layout_marginLeft="160dp"
+            android:background="@drawable/rounded_square_solid"
+            android:src="@drawable/color"
+            app:layout_constraintBottom_toBottomOf="@+id/iconImg"
+            app:layout_constraintStart_toEndOf="@+id/iconImg"
+            app:layout_constraintTop_toTopOf="@+id/iconImg"
+            app:layout_constraintVertical_bias="0.0"
+            app:tint="@color/orange" />
+
+        <TextView
+            android:id="@+id/colorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:text="color"
+            android:textColor="@color/white"
+            android:textSize="@dimen/selectTextSize"
+            app:layout_constraintBottom_toBottomOf="@+id/colorImg"
+            app:layout_constraintStart_toEndOf="@+id/colorImg"
+            app:layout_constraintTop_toTopOf="@+id/colorImg" />
+
+        <View
+            android:layout_width="@dimen/itemWidth"
+            android:layout_height="2dp"
+            android:background="@color/textGray"
+            app:layout_constraintBottom_toBottomOf="@+id/hintTextDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/hintTextDate" />
+
+        <TextView
+            android:id="@+id/hintTextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/selectTabHeight"
+            android:background="@color/mainDark"
+            android:gravity="center"
+            android:paddingLeft="@dimen/hintSelectTextPadding"
+            android:paddingRight="@dimen/hintSelectTextPadding"
+            android:text="I want to do this task on"
+            android:textColor="@color/textGray"
+            app:layout_constraintBottom_toTopOf="@+id/dateItem"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/dateItem"
+            android:layout_width="@dimen/itemWidth"
+            android:layout_height="@dimen/selectTabHeight"
+            android:layout_marginTop="160dp"
+            android:background="@drawable/rounded_square_solid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameTaskText">
+
+            <ImageView
+                android:layout_width="@dimen/iconImgWidth"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/calendar"
+                app:tint="@color/orange" />
+
+            <TextView
+                android:id="@+id/dateItemText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:hint="Select date"
+                android:textColor="@color/white"
+                android:textColorHint="@color/textGray"
+                android:textSize="@dimen/selectTextSize" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="@dimen/itemWidth"
+            android:layout_height="2dp"
+            android:background="@color/textGray"
+            app:layout_constraintBottom_toBottomOf="@+id/hintTextTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/hintTextTime" />
+
+        <TextView
+            android:id="@+id/hintTextTime"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/selectTabHeight"
+            android:background="@color/mainDark"
+            android:gravity="center"
+            android:paddingLeft="@dimen/hintSelectTextPadding"
+            android:paddingRight="@dimen/hintSelectTextPadding"
+            android:text="Remind me at these times"
+            android:textColor="@color/textGray"
+            app:layout_constraintBottom_toTopOf="@+id/startTimer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/startTimer"
+            android:layout_width="@dimen/itemWidth"
+            android:layout_height="@dimen/selectTabHeight"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/rounded_square_solid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateItem">
+
+            <ImageView
+                android:layout_width="@dimen/iconImgWidth"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/time"
+                app:tint="@color/orange" />
+
+            <TextView
+                android:id="@+id/startTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:hint="Add time"
+                android:textColor="@color/white"
+                android:textColorHint="@color/textGray"
+                android:textSize="@dimen/selectTextSize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/endTimer"
+            android:layout_width="@dimen/itemWidth"
+            android:layout_height="@dimen/selectTabHeight"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_square_solid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startTimer">
+
+            <ImageView
+                android:layout_width="@dimen/iconImgWidth"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/time"
+                app:tint="@color/orange" />
+
+            <TextView
+                android:id="@+id/endTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:hint="Add time"
+                android:textColor="@color/white"
+                android:textColorHint="@color/textGray"
+                android:textSize="@dimen/selectTextSize" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

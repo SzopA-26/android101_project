@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mainDark"
+    android:orientation="vertical"
+    tools:context=".TodayActivity">
+
+    <TextView
+        android:id="@+id/doneBtnText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/headTextHeight"
+        android:background="@color/headDark"
+        android:gravity="bottom|center_horizontal"
+        android:text="Today"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mainHeight">
+
+        <View
+            android:id="@+id/horLine1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#fff"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <View
+            android:id="@+id/horLine2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="16dp"
+            android:background="#fff"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/monthText"
+            tools:ignore="MissingConstraints" />
+
+        <View
+            android:id="@+id/verLine"
+            android:layout_width="1dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="21dp"
+            android:background="#fff"
+            app:layout_constraintStart_toEndOf="@+id/dateText"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/monthText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="November 2020"
+            android:textColor="#fff"
+            android:textSize="@dimen/dayTextSize"
+            app:layout_constraintStart_toStartOf="@+id/dayText"
+            app:layout_constraintTop_toBottomOf="@+id/dayText" />
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="86dp"
+            android:layout_height="82dp"
+            android:gravity="center"
+            android:text="05"
+            android:textColor="#fff"
+            android:textSize="@dimen/dateTextSize"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="24dp"
+            android:text="Thursday"
+            android:textColor="#fff"
+            android:textSize="@dimen/dayTextSize"
+            app:layout_constraintStart_toStartOf="@+id/verLine"
+            app:layout_constraintTop_toTopOf="@+id/dateText" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horLine2">
+
+            <LinearLayout
+                android:id="@+id/listLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="@dimen/itemWidth"
+                    android:layout_height="@dimen/itemHeight"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/rounded_square_solid"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/fitness"
+                        tools:ignore="VectorDrawableCompat" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="bottom"
+                            android:text="Exercise"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/itemTextSize" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="top"
+                            android:text="06:00 - 07:00"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/itemTextSize" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/itemWidth"
+                    android:layout_height="@dimen/itemHeight"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/rounded_square_solid"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/coffee"
+                        tools:ignore="VectorDrawableCompat" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="bottom"
+                            android:text="Coffee Shop"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/itemTextSize" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="top"
+                            android:text="07:30"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/itemTextSize" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/itemWidth"
+                    android:layout_height="@dimen/itemHeight"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/rounded_square_solid"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/work"
+                        tools:ignore="VectorDrawableCompat" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="bottom"
+                            android:text="Work"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/itemTextSize" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="top"
+                            android:text="08:00 - 16:00"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/itemTextSize" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/testBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="68dp"
+            android:layout_marginRight="68dp"
+            android:layout_marginBottom="16dp"
+            android:text="Button"
+            app:layout_constraintBottom_toTopOf="@+id/scrollView"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/menuHeight"
+        android:background="@color/headDark"
+        android:paddingTop="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/todayBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/calendar"
+                app:tint="@color/blue"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/allBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/list"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/newBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/add"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/statBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/stat"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/hisBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/history"
+                tools:ignore="VectorDrawableCompat" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/todayBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Today"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/allBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="All"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/newBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="New"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/statBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Stat"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/hisBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="History"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/menuTextSize" />
+        </TableRow>
+    </TableLayout>
+
+    <View
+        android:id="@+id/bottomBack"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/purple_200" />
+
+</LinearLayout>

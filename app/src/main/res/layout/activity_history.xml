@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HistoryActivity">
+
+    <TextView
+        android:id="@+id/doneBtnText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/headTextHeight"
+        android:background="@color/headDark"
+        android:gravity="bottom|center_horizontal"
+        android:text="History"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mainHeight"
+        android:background="@color/mainDark">
+
+        <View
+            android:id="@+id/horLine1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#fff"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="128dp"
+            tools:layout_editor_absoluteY="98dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/menuHeight"
+        android:background="@color/headDark"
+        android:paddingTop="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/todayBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/calendar" />
+
+            <ImageView
+                android:id="@+id/allBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/list" />
+
+            <ImageView
+                android:id="@+id/newBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/add" />
+
+            <ImageView
+                android:id="@+id/statBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/stat" />
+
+            <ImageView
+                android:id="@+id/hisBtnImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:tint="@color/blue"
+                app:srcCompat="@drawable/history" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/todayBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Today"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/allBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="All"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/newBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="New"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/statBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Stat"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/menuTextSize" />
+
+            <TextView
+                android:id="@+id/hisBtnText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="History"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/menuTextSize" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
