@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".HistoryActivity">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/doneBtnText"
@@ -17,30 +16,34 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp" />
 
+    <View
+        android:id="@+id/horLine1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#fff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/mainHeight"
         android:background="@color/mainDark">
 
-        <View
-            android:id="@+id/horLine1"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#fff"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout_editor_absoluteX="128dp"
-            tools:layout_editor_absoluteY="98dp">
+            tools:layout_editor_absoluteY="98dp"
+            android:paddingBottom="12dp">
 
             <LinearLayout
+                android:id="@+id/listLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="vertical" />
+
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -60,36 +63,41 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/calendar" />
+                app:srcCompat="@drawable/calendar"
+                tools:ignore="VectorDrawableCompat" />
 
             <ImageView
                 android:id="@+id/allBtnImg"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/list" />
+                app:srcCompat="@drawable/list"
+                tools:ignore="VectorDrawableCompat" />
 
             <ImageView
                 android:id="@+id/newBtnImg"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/add" />
+                app:srcCompat="@drawable/add"
+                tools:ignore="VectorDrawableCompat" />
 
             <ImageView
                 android:id="@+id/statBtnImg"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/stat" />
+                app:srcCompat="@drawable/stat"
+                tools:ignore="VectorDrawableCompat" />
 
             <ImageView
                 android:id="@+id/hisBtnImg"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:tint="@color/blue"
-                app:srcCompat="@drawable/history" />
+                app:srcCompat="@drawable/history"
+                app:tint="@color/blue"
+                tools:ignore="VectorDrawableCompat" />
         </TableRow>
 
         <TableRow

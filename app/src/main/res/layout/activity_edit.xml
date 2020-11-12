@@ -38,7 +38,7 @@
             android:layout_width="130dp"
             android:layout_height="match_parent"
             android:gravity="bottom|center_horizontal"
-            android:text="New"
+            android:text="Edit"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"

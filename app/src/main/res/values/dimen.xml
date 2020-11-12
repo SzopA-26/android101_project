@@ -11,7 +11,7 @@
 
     <dimen name="selectTextPadding">12dp</dimen>
     <dimen name="hintSelectTextPadding">5dp</dimen>
-    <dimen name="colorPadding">30dp</dimen>
+    <dimen name="colorPadding">10dp</dimen>
     <dimen name="colorMargin">20dp</dimen>
     <dimen name="iconSelectHeight">50dp</dimen>
     <dimen name="iconSelectPadding">5dp</dimen>

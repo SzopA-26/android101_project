@@ -4,18 +4,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,17 +22,14 @@ import android.widget.TimePicker;
 import com.example.myapplication.component.ColorDialog;
 import com.example.myapplication.component.IconDialog;
 import com.example.myapplication.model.Item;
-import com.example.myapplication.service.DimenManager;
+import com.example.myapplication.model.ItemDatabase;
+import com.example.myapplication.service.DataManager;
 import com.example.myapplication.service.RangeTimePickerDialog;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class NewActivity extends AppCompatActivity {
@@ -61,10 +55,14 @@ public class NewActivity extends AppCompatActivity {
 
     private final int LAUNCH_CALENDAR = 1;
 
+    private ItemDatabase appDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new);
+
+        appDB = ItemDatabase.getInstance(this);
 
         nameTaskText = findViewById(R.id.nameTaskText);
         iconImg = findViewById(R.id.iconImg);
@@ -79,7 +77,7 @@ public class NewActivity extends AppCompatActivity {
         setNavBtnOnClick();
         setIconOnClick();
         setTimer();
-        dateItemText.setText(DimenManager.getFullDateFormat(selectedDate));
+        dateItemText.setText(DataManager.getDisplayDateFormat(selectedDate, true));
     }
 
     private void setIconOnClick() {
@@ -106,11 +104,13 @@ public class NewActivity extends AppCompatActivity {
         doneBtnText = findViewById(R.id.doneBtnText);
 
         backBtnText.setOnClickListener(v -> {
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_CANCELED, returnIntent);
             finish();
         });
         doneBtnText.setOnClickListener(v -> {
             if (nameTaskText.getText().toString().equals("")) {
-                AlertDialog dialog = new AlertDialog.Builder(NewActivity.this)
+                AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle("Please enter your task name")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -119,14 +119,17 @@ public class NewActivity extends AppCompatActivity {
                         })
                         .show();
             } else {
-                Item item = new Item(nameTaskText.getText().toString(), LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDayOfMonth()), selectedIcon, selectedColor);
-                if (stIsSet) item.setStart(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDayOfMonth()).atTime(stHour, stMin));
-                if (!stIsSet && etIsSet) item.setStart(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDayOfMonth()).atTime(etHour, etMin));
-                if (etIsSet) item.setEnd(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDayOfMonth()).atTime(etHour, etMin));
+                String date = DataManager.dateTimeToString(LocalDate.of(selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDayOfMonth()).atTime(0,0,0));
+                Item item = new Item(nameTaskText.getText().toString(), date, selectedIcon, selectedColor);
+                if (stIsSet) item.setStart(DataManager.getStringTime(stHour,stMin));
+                if (etIsSet) item.setEnd(DataManager.getStringTime(etHour,etMin));
 
-                Log.i("done", "setNavBtnOnClick: " + item);
-//                finish();
+                appDB.itemDao().insertItem(item);
 
+                Log.i("ii", "created: " + item);
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
             }
         });
 
@@ -153,6 +156,7 @@ public class NewActivity extends AppCompatActivity {
                     startTimeText.setText(DateFormat.format("HH:mm", calendar));
                     stIsSet = true;
                     endTimer.setEnabled(true);
+                    endTimer.setAlpha(1);
                 }
             }, 24, 0, true);
             dialog.updateTime(stHour, stMin);
@@ -192,9 +196,9 @@ public class NewActivity extends AppCompatActivity {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
                 selectedDate = LocalDateTime.parse(result + " 00:00:00", formatter);
 
-                String dateStr = DimenManager.getFullDateFormat(selectedDate);
+                String dateStr = DataManager.getDisplayDateFormat(selectedDate, true);
                 dateItemText.setText(dateStr);
-                Log.i("cal", "onActivityResult: " + dateStr);
+                Log.i("ii", "dateSelected: " + dateStr);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result

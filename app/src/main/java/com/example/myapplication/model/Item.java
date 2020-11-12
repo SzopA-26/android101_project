@@ -1,57 +1,56 @@
 package com.example.myapplication.model;
 
-import android.os.Build;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-import androidx.annotation.RequiresApi;
-
-import com.example.myapplication.service.DimenManager;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-
+@Entity(tableName = "item")
 public class Item {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @ColumnInfo(name = "name")
     private String name;
-    private LocalDate date;
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private int icon, color;
-    private boolean isAvailable = true;
+    @ColumnInfo(name = "date")
+    private String date;
+    @ColumnInfo(name = "start")
+    private String start;
+    @ColumnInfo(name = "end")
+    private String end;
+    @ColumnInfo(name = "icon")
+    private int icon;
+    @ColumnInfo(name = "color")
+    private int color;
+    @ColumnInfo(name = "isAvailable")
+    private boolean isAvailable;
 
-    public Item(String name, LocalDate date, int icon, int color) {
+    public Item() { }
+
+    @Ignore
+    public Item(String name, String date, int icon, int color) {
         this.name = name;
         this.date = date;
         this.icon = icon;
         this.color = color;
+        isAvailable = true;
     }
 
-    public Item(String name, LocalDate date, LocalDateTime start, LocalDateTime end, int icon, int color) {
-        this.name = name;
-        this.date = date;
-        this.start = start;
-        this.end = end;
-        this.icon = icon;
-        this.color = color;
-    }
-
-    public Item(String name, LocalDate date, LocalDateTime start, int icon, int color) {
-        this.name = name;
-        this.date = date;
-        this.start = start;
-        this.icon = icon;
-        this.color = color;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public String getTime() {
         if (start == null) {
-            return "-";
+            return "";
         }
         if (end == null) {
-            return DimenManager.getTimeFormat(start);
-        } return DimenManager.getTimeFormat(start) + " - " + DimenManager.getTimeFormat(end);
+            return start;
+        } return start + " - " + end;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -61,30 +60,27 @@ public class Item {
         this.name = name;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public LocalDateTime getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
-        if (start == null || start.equals(end)) {
-            return;
-        }
+    public void setEnd(String end) {
         this.end = end;
     }
 
@@ -115,10 +111,11 @@ public class Item {
     @Override
     public String toString() {
         return "Item{" +
-                "name='" + name + '\'' +
-                ", date=" + date +
-                ", start=" + start +
-                ", end=" + end +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date='" + date + '\'' +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
                 ", icon=" + icon +
                 ", color=" + color +
                 ", isAvailable=" + isAvailable +
