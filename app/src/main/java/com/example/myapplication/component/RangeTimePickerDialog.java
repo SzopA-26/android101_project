@@ -1,4 +1,4 @@
-package com.example.myapplication.service;
+package com.example.myapplication.component;
 
 import android.app.TimePickerDialog;
 import android.content.Context;

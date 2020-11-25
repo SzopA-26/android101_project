@@ -6,15 +6,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/doneBtnText"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/headTextHeight"
-        android:background="@color/headDark"
-        android:gravity="bottom|center_horizontal"
-        android:text="History"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp" />
+        android:background="@color/headDark">
+
+        <TextView
+            android:id="@+id/clearBtnText"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:text="CLEAR ALL"
+            android:textColor="@color/red"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:text="History"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/horLine1"
@@ -24,6 +43,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,7 +63,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical" />
+                android:orientation="vertical" >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/emptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/mainDark">
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="@dimen/itemWidth"
+                        android:layout_height="2dp"
+                        android:background="@color/textGray"
+                        app:layout_constraintBottom_toBottomOf="@+id/hintTextDate"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/hintTextDate" />
+
+                    <TextView
+                        android:id="@+id/hintTextDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/selectTabHeight"
+                        android:background="@color/mainDark"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/hintSelectTextPadding"
+                        android:paddingRight="@dimen/hintSelectTextPadding"
+                        android:text="YOUR TASK IS EMPTY"
+                        android:textColor="@color/textGray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

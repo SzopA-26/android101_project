@@ -24,6 +24,9 @@ public class DataManager {
     public static int iconWidth = 120;
     public static int iconMargin = 10;
 
+    public static final int LAUNCH_NEW = 1;
+    public static final int LAUNCH_EDIT = 2;
+
     public static int dpToPx(float dp, Context context) {
         return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
@@ -47,6 +50,25 @@ public class DataManager {
         }
         if (dateToCompare.equals(tomorrow)) {
             return "Tomorrow";
+        }
+        return dateTime.format(formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getDisplayFullDateFormat(LocalDateTime dateTime, boolean hasYear) {
+        String pattern = "dd MMMM";
+        if (hasYear) {
+            pattern = "dd MMMM yyyy";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime dateToCompare = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth()).atTime(0,0);
+        LocalDateTime today = LocalDate.now().atTime(0,0);
+        LocalDateTime tomorrow = LocalDate.of(today.getYear(), today.getMonth(), today.getDayOfMonth() + 1).atTime(0,0);
+        if (dateToCompare.equals(today)) {
+            return "Today, " + dateTime.format(formatter);
+        }
+        if (dateToCompare.equals(tomorrow)) {
+            return "Tomorrow, " + dateTime.format(formatter);
         }
         return dateTime.format(formatter);
     }

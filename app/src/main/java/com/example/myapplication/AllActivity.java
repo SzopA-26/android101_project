@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
@@ -16,20 +17,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication.component.ProgressDialog;
 import com.example.myapplication.model.Item;
 import com.example.myapplication.model.ItemDatabase;
+import com.example.myapplication.service.ActivityShowList;
 import com.example.myapplication.service.DataManager;
+import com.example.myapplication.service.DateComparator;
 
 import java.util.List;
 
-public class AllActivity extends AppCompatActivity {
-    private ImageView todayBtnImg, newBtnImg, statBtnImg, hisBtnImg;
-    private TextView todayBtnText, newBtnText, statBtnText, hisBtnText;
+public class AllActivity extends ActivityShowList {
     private LinearLayout listLayout;
     private ItemDatabase appDB;
     private List<Item> items;
-
-    private int LAUNCH_NEW = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -40,17 +40,31 @@ public class AllActivity extends AppCompatActivity {
         appDB = ItemDatabase.getInstance(this);
 
         listLayout = findViewById(R.id.listLayout);
-        items = appDB.itemDao().getItemAllList(true);
+        ConstraintLayout emptyText = findViewById(R.id.emptyText);
+        items = getItemList();
         setItemList(items);
+        if (items.size() == 0) {
+            emptyText.findViewById(R.id.emptyText);
+            listLayout.addView(emptyText);
+        }
 
         setMenuBtnOnClick();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public List<Item> getItemList() {
+        List<Item> items = appDB.itemDao().getItemAllList(true);
+        items.sort(new DateComparator());
+        return items;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setItemList(List<Item> items) {
+    public void setItemList(List<Item> items) {
         Log.i("ii", "all-amount: " + items.size());
         Log.i("ii", "all-items: " + items.toString());
 
+        listLayout.removeAllViews();
         for (Item item : items) {
             LinearLayout linear = new LinearLayout(this);
             linear.setOrientation(LinearLayout.HORIZONTAL);
@@ -101,24 +115,36 @@ public class AllActivity extends AppCompatActivity {
             detail.addView(time);
             linear.addView(detail);
             listLayout.addView(linear);
+
+            setItemOnClick(linear, item.getId());
         }
     }
 
-    private void setMenuBtnOnClick() {
-        todayBtnImg = findViewById(R.id.todayBtnImg);
-        newBtnImg = findViewById(R.id.newBtnImg);
-        statBtnImg = findViewById(R.id.statBtnImg);
-        hisBtnImg = findViewById(R.id.hisBtnImg);
+    @Override
+    public void setItemOnClick(LinearLayout item, int itemId) {
+        item.setOnClickListener(v -> {
+            ProgressDialog dialog = new ProgressDialog();
+            dialog.setItemId(itemId);
+            dialog.setActivity(this);
+            dialog.show(getSupportFragmentManager(), "ProgressDialog");
+        });
+    }
 
-        todayBtnText = findViewById(R.id.todayBtnText);
-        newBtnText = findViewById(R.id.newBtnText);
-        statBtnText = findViewById(R.id.statBtnText);
-        hisBtnText = findViewById(R.id.hisBtnText);
+    private void setMenuBtnOnClick() {
+        ImageView todayBtnImg = findViewById(R.id.todayBtnImg);
+        ImageView newBtnImg = findViewById(R.id.newBtnImg);
+        ImageView statBtnImg = findViewById(R.id.statBtnImg);
+        ImageView hisBtnImg = findViewById(R.id.hisBtnImg);
+
+        TextView todayBtnText = findViewById(R.id.todayBtnText);
+        TextView newBtnText = findViewById(R.id.newBtnText);
+        TextView statBtnText = findViewById(R.id.statBtnText);
+        TextView hisBtnText = findViewById(R.id.hisBtnText);
 
         todayBtnImg.setOnClickListener(v -> startActivity(new Intent(AllActivity.this, TodayActivity.class)));
         todayBtnText.setOnClickListener(v -> startActivity(new Intent(AllActivity.this, TodayActivity.class)));
-        newBtnImg.setOnClickListener(v -> startActivityForResult(new Intent(AllActivity.this, NewActivity.class), LAUNCH_NEW));
-        newBtnText.setOnClickListener(v -> startActivityForResult(new Intent(AllActivity.this, NewActivity.class), LAUNCH_NEW));
+        newBtnImg.setOnClickListener(v -> startActivityForResult(new Intent(AllActivity.this, NewActivity.class), DataManager.LAUNCH_NEW));
+        newBtnText.setOnClickListener(v -> startActivityForResult(new Intent(AllActivity.this, NewActivity.class), DataManager.LAUNCH_NEW));
         statBtnImg.setOnClickListener(v -> startActivity(new Intent(AllActivity.this, StatActivity.class)));
         statBtnText.setOnClickListener(v -> startActivity(new Intent(AllActivity.this, StatActivity.class)));
         hisBtnImg.setOnClickListener(v -> startActivity(new Intent(AllActivity.this, HistoryActivity.class)));
@@ -130,10 +156,20 @@ public class AllActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == LAUNCH_NEW) {
+        if (requestCode == DataManager.LAUNCH_NEW) {
             if (resultCode == Activity.RESULT_OK) {
                 listLayout.removeAllViews();
-                items = appDB.itemDao().getItemAllList(true);
+                items = getItemList();
+                setItemList(items);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+
+            }
+        }
+        if (requestCode == DataManager.LAUNCH_EDIT) {
+            if (resultCode == Activity.RESULT_OK) {
+                listLayout.removeAllViews();
+                items = getItemList();
                 setItemList(items);
             }
             if (resultCode == Activity.RESULT_CANCELED) {

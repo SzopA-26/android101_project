@@ -21,12 +21,18 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.myapplication.NewActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.service.ActivityDetail;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IconDialog extends DialogFragment {
+    private ActivityDetail activity;
+
+    public void setActivity(ActivityDetail activity) {
+        this.activity = activity;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -77,8 +83,7 @@ public class IconDialog extends DialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setIconOnClick(int icon) {
-        ((NewActivity) getActivity()).iconImg.setImageResource(icon);
-        ((NewActivity) getActivity()).setSelectedIcon(icon);
+        activity.setActivityIcon(icon);
         dismiss();
     }
 }

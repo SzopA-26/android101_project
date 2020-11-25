@@ -3,33 +3,37 @@ package com.example.myapplication;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication.component.ProgressDialog;
 import com.example.myapplication.model.Item;
 import com.example.myapplication.model.ItemDatabase;
+import com.example.myapplication.service.ActivityShowList;
 import com.example.myapplication.service.DataManager;
+import com.example.myapplication.service.DateComparator;
 
+import java.util.Collections;
 import java.util.List;
 
-public class HistoryActivity extends AppCompatActivity {
-    private ImageView todayBtnImg, allBtnImg, newBtnImg, statBtnImg;
-    private TextView todayBtnText, allBtnText, newBtnText, statBtnText;
+public class HistoryActivity extends ActivityShowList {
     private LinearLayout listLayout;
     private ItemDatabase appDB;
     private List<Item> items;
-
-    private int LAUNCH_NEW = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -40,17 +44,33 @@ public class HistoryActivity extends AppCompatActivity {
         appDB = ItemDatabase.getInstance(this);
 
         listLayout = findViewById(R.id.listLayout);
-        items = appDB.itemDao().getItemAllList(false);
+        ConstraintLayout emptyText = findViewById(R.id.emptyText);
+        items = getItemList();
         setItemList(items);
+        if (items.size() == 0) {
+            emptyText.findViewById(R.id.emptyText);
+            listLayout.addView(emptyText);
+        }
 
+        setClearBtnOnClick();
         setMenuBtnOnClick();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public List<Item> getItemList() {
+        List<Item> items = appDB.itemDao().getItemAllList(false);
+        items.sort(new DateComparator());
+        Collections.reverse(items);
+        return items;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setItemList(List<Item> items) {
+    public void setItemList(List<Item> items) {
         Log.i("ii", "his-amount: " + items.size());
         Log.i("ii", "his-items: " + items.toString());
 
+        listLayout.removeAllViews();
         for (Item item : items) {
             LinearLayout linear = new LinearLayout(this);
             linear.setOrientation(LinearLayout.HORIZONTAL);
@@ -101,24 +121,64 @@ public class HistoryActivity extends AppCompatActivity {
             detail.addView(time);
             linear.addView(detail);
             listLayout.addView(linear);
+
+            setItemOnClick(linear, item.getId());
         }
     }
 
-    private void setMenuBtnOnClick() {
-        todayBtnImg = findViewById(R.id.todayBtnImg);
-        allBtnImg = findViewById(R.id.allBtnImg);
-        newBtnImg = findViewById(R.id.newBtnImg);
-        statBtnImg = findViewById(R.id.statBtnImg);
+    @Override
+    public void setItemOnClick(LinearLayout item, int itemId) {
+        item.setOnClickListener(v -> {
+            ProgressDialog dialog = new ProgressDialog();
+            dialog.setItemId(itemId);
+            dialog.setActivity(this);
+            dialog.show(getSupportFragmentManager(), "ProgressDialog");
+        });
+    }
 
-        todayBtnText = findViewById(R.id.todayBtnText);
-        allBtnText = findViewById(R.id.allBtnText);
-        newBtnText = findViewById(R.id.newBtnText);
-        statBtnText = findViewById(R.id.statBtnText);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setClearBtnOnClick() {
+        TextView clearBtnText = findViewById(R.id.clearBtnText);
+        clearBtnText.setOnClickListener(v -> {
+            if (getItemList().size() > 0) {
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle("Do you want to delete all task ?")
+                        .setMessage("This will remove all task from history, you can't get it back later.")
+                        .setPositiveButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setNegativeButton("YES", new DialogInterface.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i("ii", "onClick: " + "delete item");
+                                appDB.itemDao().deleteAllItem();
+                                setItemList(getItemList());
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+    }
+
+    private void setMenuBtnOnClick() {
+        ImageView todayBtnImg = findViewById(R.id.todayBtnImg);
+        ImageView allBtnImg = findViewById(R.id.allBtnImg);
+        ImageView newBtnImg = findViewById(R.id.newBtnImg);
+        ImageView statBtnImg = findViewById(R.id.statBtnImg);
+
+        TextView todayBtnText = findViewById(R.id.todayBtnText);
+        TextView allBtnText = findViewById(R.id.allBtnText);
+        TextView newBtnText = findViewById(R.id.newBtnText);
+        TextView statBtnText = findViewById(R.id.statBtnText);
 
         allBtnImg.setOnClickListener(v -> startActivity(new Intent(HistoryActivity.this, AllActivity.class)));
         allBtnText.setOnClickListener(v -> startActivity(new Intent(HistoryActivity.this, AllActivity.class)));
-        newBtnImg.setOnClickListener(v -> startActivityForResult(new Intent(HistoryActivity.this, NewActivity.class), LAUNCH_NEW));
-        newBtnText.setOnClickListener(v -> startActivityForResult(new Intent(HistoryActivity.this, NewActivity.class), LAUNCH_NEW));
+        newBtnImg.setOnClickListener(v -> startActivityForResult(new Intent(HistoryActivity.this, NewActivity.class), DataManager.LAUNCH_NEW));
+        newBtnText.setOnClickListener(v -> startActivityForResult(new Intent(HistoryActivity.this, NewActivity.class), DataManager.LAUNCH_NEW));
         statBtnImg.setOnClickListener(v -> startActivity(new Intent(HistoryActivity.this, StatActivity.class)));
         statBtnText.setOnClickListener(v -> startActivity(new Intent(HistoryActivity.this, StatActivity.class)));
         todayBtnImg.setOnClickListener(v -> startActivity(new Intent(HistoryActivity.this, TodayActivity.class)));
@@ -130,10 +190,10 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == LAUNCH_NEW) {
+        if (requestCode == DataManager.LAUNCH_NEW) {
             if (resultCode == Activity.RESULT_OK) {
                 listLayout.removeAllViews();
-                items = appDB.itemDao().getItemAllList(true);
+                items = getItemList();
                 setItemList(items);
             }
             if (resultCode == Activity.RESULT_CANCELED) {

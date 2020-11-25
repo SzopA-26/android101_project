@@ -23,6 +23,17 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/mainHeight">
 
+        <com.example.myapplication.component.CustomDigitalClock
+            android:id="@+id/digitalClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:textSize="40sp"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/horLine2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <View
             android:id="@+id/horLine1"
             android:layout_width="match_parent"
@@ -99,22 +110,43 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/emptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/mainDark">
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="@dimen/itemWidth"
+                        android:layout_height="2dp"
+                        android:background="@color/textGray"
+                        app:layout_constraintBottom_toBottomOf="@+id/hintTextDate"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/hintTextDate" />
+
+                    <TextView
+                        android:id="@+id/hintTextDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/selectTabHeight"
+                        android:background="@color/mainDark"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/hintSelectTextPadding"
+                        android:paddingRight="@dimen/hintSelectTextPadding"
+                        android:text="YOUR TASK IS EMPTY"
+                        android:textColor="@color/textGray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
         </ScrollView>
-
-        <Button
-            android:id="@+id/testBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="68dp"
-            android:layout_marginRight="68dp"
-            android:layout_marginBottom="16dp"
-            android:text="Delete All"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/red"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView"
-            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

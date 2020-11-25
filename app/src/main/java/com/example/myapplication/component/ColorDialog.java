@@ -14,12 +14,18 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.myapplication.NewActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.service.ActivityDetail;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ColorDialog extends DialogFragment {
     private List<ImageView> colorsView = new ArrayList<>();
+    private ActivityDetail activity;
+
+    public void setActivity(ActivityDetail activity) {
+        this.activity = activity;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -43,9 +49,7 @@ public class ColorDialog extends DialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setColorOnClick(int color) {
-        ((NewActivity) getActivity()).colorImg.setColorFilter(getResources().getColor(color));
-        ((NewActivity) getActivity()).iconImg.setColorFilter(getResources().getColor(color));
-        ((NewActivity) getActivity()).setSelectedColor(color);
+        activity.setActivityColor(color);
         dismiss();
     }
 

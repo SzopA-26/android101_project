@@ -3,10 +3,19 @@ package com.example.myapplication;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,82 +23,131 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DigitalClock;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication.component.CustomDigitalClock;
 import com.example.myapplication.component.IconDialog;
 import com.example.myapplication.component.ProgressDialog;
 import com.example.myapplication.model.Item;
 import com.example.myapplication.model.ItemDatabase;
+import com.example.myapplication.service.ActivityShowList;
 import com.example.myapplication.service.DataManager;
+import com.example.myapplication.service.DateComparator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
-public class TodayActivity extends AppCompatActivity {
-    private ImageView allBtnImg, newBtnImg, statBtnImg, hisBtnImg;
-    private TextView allBtnText, newBtnText, statBtnText, hisBtnText;
+public class TodayActivity extends ActivityShowList {
     private LinearLayout listLayout;
     private ItemDatabase appDB;
     private List<Item> items;
-
-    private int LAUNCH_NEW = 1;
-
-    private Button testBtn;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today);
+        setTodayDisplay();
 
         appDB = ItemDatabase.getInstance(this);
 
         listLayout = findViewById(R.id.listLayout);
-        items = appDB.itemDao().getItemTodayList(DataManager.dateTimeToString(LocalDateTime.now()), true);
+        ConstraintLayout emptyText = findViewById(R.id.emptyText);
+        items = getItemList();
         setItemList(items);
+        if (items.size() == 0) {
+            emptyText.findViewById(R.id.emptyText);
+            listLayout.addView(emptyText);
+        }
 
         setMenuBtnOnClick();
-        setTestBtn();
+        setBackgroundAlarm();
     }
 
-    private void setTestBtn() {
-        testBtn = findViewById(R.id.testBtn);
-        testBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setBackgroundAlarm() {
+        Intent intent1 = new Intent(this, MyReceiver.class);
+        intent1.setAction("com.example.myapplication.alarms");
 
-//                appDB.itemDao().deleteAllItem();
+        Log.i("ii", "setBackgroundAlarm: " + LocalDateTime.now().toLocalTime().toString());
+        int time = 10; // second
 
-//                Item testItem = new Item("History Testing", "2020-11-12", 2131165303, 2131034161);
-//                testItem.setAvailable(false);
-//                appDB.itemDao().insertItem(testItem);
+        Intent intent = new Intent(getApplicationContext(), TodayActivity.class);
+        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time * 1000, pi);
 
-//                startActivity(new Intent(TodayActivity.this, EditActivity.class));
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setNotification() {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("TASK_ALARM",
+                    "Task Alarm",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("YOUR_NOTIFICATION_CHANNEL_DESCRIPTION");
+            mNotificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "TASK_ALARM")
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setSmallIcon(R.drawable.calendar) // notification icon
+                .setContentTitle("title") // title for notification
+                .setContentText("message")// message for notification
+                .setAutoCancel(true); // clear notification after click
+        Intent intent = new Intent(getApplicationContext(), TodayActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 1234, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pi);
+        mNotificationManager.notify(0, mBuilder.build());
 
-            }
-        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setTodayDisplay() {
+        TextView dateText = findViewById(R.id.dateText);
+        TextView dayText = findViewById(R.id.dayText);
+        TextView monthText = findViewById(R.id.monthText);
+        String dayOfMonth = "";
+        if (LocalDate.now().getDayOfMonth() < 10) {
+            dayOfMonth += "0";
+        } dayOfMonth += LocalDate.now().getDayOfMonth();
+        dateText.setText(dayOfMonth);
+
+        dayText.setAllCaps(false);monthText.setAllCaps(false);
+        String dayUpper = LocalDate.now().getDayOfWeek().toString();
+        int dayLength = dayUpper.length();
+        String dayCap = dayUpper.charAt(0) + dayUpper.substring(1, dayLength).toLowerCase();
+        dayText.setText(dayCap);
+
+        String monthUpper = LocalDate.now().getMonth().toString();
+        int monthLength = monthUpper.length();
+        String monthCap = monthUpper.charAt(0) + monthUpper.substring(1, monthLength).toLowerCase();
+        monthText.setText(monthCap+ " " + LocalDate.now().getYear());
     }
 
     private void setMenuBtnOnClick() {
-        allBtnImg = findViewById(R.id.allBtnImg);
-        newBtnImg = findViewById(R.id.newBtnImg);
-        statBtnImg = findViewById(R.id.statBtnImg);
-        hisBtnImg = findViewById(R.id.hisBtnImg);
+        ImageView allBtnImg = findViewById(R.id.allBtnImg);
+        ImageView newBtnImg = findViewById(R.id.newBtnImg);
+        ImageView statBtnImg = findViewById(R.id.statBtnImg);
+        ImageView hisBtnImg = findViewById(R.id.hisBtnImg);
 
-        allBtnText = findViewById(R.id.allBtnText);
-        newBtnText = findViewById(R.id.newBtnText);
-        statBtnText = findViewById(R.id.statBtnText);
-        hisBtnText = findViewById(R.id.hisBtnText);
+        TextView allBtnText = findViewById(R.id.allBtnText);
+        TextView newBtnText = findViewById(R.id.newBtnText);
+        TextView statBtnText = findViewById(R.id.statBtnText);
+        TextView hisBtnText = findViewById(R.id.hisBtnText);
 
         allBtnImg.setOnClickListener(v -> startActivity(new Intent(TodayActivity.this, AllActivity.class)));
         allBtnText.setOnClickListener(v -> startActivity(new Intent(TodayActivity.this, AllActivity.class)));
-        newBtnImg.setOnClickListener(v -> startActivityForResult(new Intent(TodayActivity.this, NewActivity.class), LAUNCH_NEW));
-        newBtnText.setOnClickListener(v -> startActivityForResult(new Intent(TodayActivity.this, NewActivity.class), LAUNCH_NEW));
+        newBtnImg.setOnClickListener(v -> startActivityForResult(new Intent(TodayActivity.this, NewActivity.class), DataManager.LAUNCH_NEW));
+        newBtnText.setOnClickListener(v -> startActivityForResult(new Intent(TodayActivity.this, NewActivity.class), DataManager.LAUNCH_NEW));
         statBtnImg.setOnClickListener(v -> startActivity(new Intent(TodayActivity.this, StatActivity.class)));
         statBtnText.setOnClickListener(v -> startActivity(new Intent(TodayActivity.this, StatActivity.class)));
         hisBtnImg.setOnClickListener(v -> startActivity(new Intent(TodayActivity.this, HistoryActivity.class)));
@@ -98,36 +156,18 @@ public class TodayActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LAUNCH_NEW) {
-            if(resultCode == Activity.RESULT_OK){
-                listLayout.removeAllViews();
-                items = appDB.itemDao().getItemTodayList(DataManager.dateTimeToString(LocalDateTime.now()), true);
-                setItemList(items);
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
-        }
-    }
-
-    protected void setItemOnClick(LinearLayout item) {
-        item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProgressDialog dialog = new ProgressDialog();
-                dialog.show(getSupportFragmentManager(), "ProgressDialog");
-            }
-        });
+    public List<Item> getItemList() {
+        List<Item> items = appDB.itemDao().getItemTodayList(DataManager.dateTimeToString(LocalDateTime.now()), true);
+        items.sort(new DateComparator());
+        return items;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    protected void setItemList(List<Item> items) {
+    public void setItemList(List<Item> items) {
         Log.i("ii", "today-amount: " + items.size());
         Log.i("ii", "today-items: " + items.toString());
 
+        listLayout.removeAllViews();
         for (Item item : items) {
             LinearLayout linear = new LinearLayout(this);
             linear.setOrientation(LinearLayout.HORIZONTAL);
@@ -180,9 +220,43 @@ public class TodayActivity extends AppCompatActivity {
             linear.addView(detail);
             listLayout.addView(linear);
 
-            setItemOnClick(linear);
+            setItemOnClick(linear, item.getId());
         }
-
     }
 
+    public void setItemOnClick(LinearLayout item, int itemId) {
+        item.setOnClickListener(v -> {
+            ProgressDialog dialog = new ProgressDialog();
+            dialog.setItemId(itemId);
+            dialog.setActivity(this);
+            dialog.show(getSupportFragmentManager(), "ProgressDialog");
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == DataManager.LAUNCH_NEW) {
+            if(resultCode == Activity.RESULT_OK){
+                listLayout.removeAllViews();
+                items = getItemList();
+                setItemList(items);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+        if (requestCode == DataManager.LAUNCH_EDIT) {
+            if (resultCode == Activity.RESULT_OK) {
+                listLayout.removeAllViews();
+                items = getItemList();
+                setItemList(items);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+
+            }
+        }
+    }
 }

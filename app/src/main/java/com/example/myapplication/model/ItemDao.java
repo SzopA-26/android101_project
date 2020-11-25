@@ -13,6 +13,12 @@ public interface ItemDao {
     @Query("select * from item where date = :today and isAvailable = :isAvailable")
     List<Item> getItemTodayList(String today, boolean isAvailable);
 
+    @Query("select * from item where date = :today")
+    List<Item> getItemTodayList(String today);
+
+    @Query("select * from item where id = :id")
+    Item getItemById(int id);
+
     @Query("select * from item where isAvailable = :isAvailable")
     List<Item> getItemAllList(boolean isAvailable);
 

@@ -14,6 +14,7 @@
     <color name="blue">#0C5DFF</color>
     <color name="orange">#FF9800</color>
     <color name="textGray">#727272</color>
+    <color name="bgTextGray">#363636</color>
 
     <color name="color1">#4CAF50</color>
     <color name="color2">#8BC34A</color>

@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,12 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.myapplication.component.CalendarDialog;
 import com.example.myapplication.component.ColorDialog;
 import com.example.myapplication.component.IconDialog;
 import com.example.myapplication.model.Item;
 import com.example.myapplication.model.ItemDatabase;
+import com.example.myapplication.service.ActivityDetail;
 import com.example.myapplication.service.DataManager;
-import com.example.myapplication.service.RangeTimePickerDialog;
+import com.example.myapplication.component.RangeTimePickerDialog;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,8 +33,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class NewActivity extends AppCompatActivity {
-    private TextView doneBtnText, backBtnText;
+public class NewActivity extends ActivityDetail {
 
     private LocalDateTime selectedDate = LocalDate.now().atTime(0,0);  //today
 
@@ -46,14 +46,6 @@ public class NewActivity extends AppCompatActivity {
     public ImageView iconImg, colorImg;
     private TextView iconText, colorText;
     private int selectedColor, selectedIcon;
-    public void setSelectedColor(int color) {
-        this.selectedColor = color;
-    }
-    public void setSelectedIcon(int selectedIcon) {
-        this.selectedIcon = selectedIcon;
-    }
-
-    private final int LAUNCH_CALENDAR = 1;
 
     private ItemDatabase appDB;
 
@@ -76,32 +68,36 @@ public class NewActivity extends AppCompatActivity {
 
         setNavBtnOnClick();
         setIconOnClick();
+        setCalendar();
         setTimer();
-        dateItemText.setText(DataManager.getDisplayDateFormat(selectedDate, true));
     }
 
     private void setIconOnClick() {
         iconImg.setOnClickListener(v -> {
             IconDialog dialog = new IconDialog();
             dialog.show(getSupportFragmentManager(), "IconDialog");
+            dialog.setActivity(this);
         });
         iconText.setOnClickListener(v -> {
             IconDialog dialog = new IconDialog();
             dialog.show(getSupportFragmentManager(), "IconDialog");
+            dialog.setActivity(this);
         });
         colorImg.setOnClickListener(v -> {
             ColorDialog dialog = new ColorDialog();
             dialog.show(getSupportFragmentManager(), "ColorDialog");
+            dialog.setActivity(this);
         });
         colorText.setOnClickListener(v -> {
             ColorDialog dialog = new ColorDialog();
             dialog.show(getSupportFragmentManager(), "ColorDialog");
+            dialog.setActivity(this);
         });
     }
 
     private void setNavBtnOnClick() {
-        backBtnText = findViewById(R.id.backBtnText);
-        doneBtnText = findViewById(R.id.doneBtnText);
+        TextView backBtnText = findViewById(R.id.backBtnText);
+        TextView doneBtnText = findViewById(R.id.doneBtnText);
 
         backBtnText.setOnClickListener(v -> {
             Intent returnIntent = new Intent();
@@ -114,7 +110,7 @@ public class NewActivity extends AppCompatActivity {
                         .setTitle("Please enter your task name")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // Continue with delete operation
+                                // Continue with done operation
                             }
                         })
                         .show();
@@ -132,11 +128,19 @@ public class NewActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        dateItemText = findViewById(R.id.dateItemText);
-        dateItem = findViewById(R.id.dateItem);
-        dateItem.setOnClickListener(v -> startActivityForResult(new Intent(NewActivity.this, CalActivity.class), LAUNCH_CALENDAR));
     }
+
+    protected void setCalendar() {
+        dateItemText = findViewById(R.id.dateItemText);
+        dateItemText.setText(DataManager.getDisplayFullDateFormat(selectedDate, true));
+        dateItem = findViewById(R.id.dateItem);
+        dateItem.setOnClickListener(v -> {
+            CalendarDialog dialog = new CalendarDialog();
+            dialog.show(getSupportFragmentManager(), "CalendarDialog");
+            dialog.setActivityDetail(this);
+        });
+    }
+
 
     private void setTimer() {
         startTimer = findViewById(R.id.startTimer);
@@ -184,25 +188,28 @@ public class NewActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void setActivityIcon(int icon) {
+        iconImg.setImageResource(icon);
+        selectedIcon = icon;
+    }
 
-        if (requestCode == LAUNCH_CALENDAR) {
-            if(resultCode == Activity.RESULT_OK){
-                String result = data.getStringExtra("result");
-                Log.i("result", "onActivityResult: " + result);
+    @Override
+    public void setActivityColor(int color) {
+        colorImg.setColorFilter(getResources().getColor(color));
+        iconImg.setColorFilter(getResources().getColor(color));
+        selectedColor = color;
+    }
 
-                String pattern = "yyyy-MM-dd HH:mm:ss";
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-                selectedDate = LocalDateTime.parse(result + " 00:00:00", formatter);
+    @Override
+    public void setActivityDate(String date) {
+        Log.i("result", "onResultDialog: " + date);
 
-                String dateStr = DataManager.getDisplayDateFormat(selectedDate, true);
-                dateItemText.setText(dateStr);
-                Log.i("ii", "dateSelected: " + dateStr);
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
-        }
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        selectedDate = LocalDateTime.parse(date + " 00:00:00", formatter);
+
+        String dateStr = DataManager.getDisplayFullDateFormat(selectedDate, true);
+        dateItemText.setText(dateStr);
+        Log.i("ii", "dateSelected: " + dateStr);
     }
 }
