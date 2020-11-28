@@ -2,14 +2,11 @@ package com.example.myapplication;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,28 +17,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.DigitalClock;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.myapplication.component.CustomDigitalClock;
-import com.example.myapplication.component.IconDialog;
 import com.example.myapplication.component.ProgressDialog;
 import com.example.myapplication.model.Item;
 import com.example.myapplication.model.ItemDatabase;
 import com.example.myapplication.service.ActivityShowList;
 import com.example.myapplication.service.DataManager;
 import com.example.myapplication.service.DateComparator;
+import com.example.myapplication.service.MyReceiver;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 
 public class TodayActivity extends ActivityShowList {
@@ -58,6 +48,8 @@ public class TodayActivity extends ActivityShowList {
 
         appDB = ItemDatabase.getInstance(this);
 
+        setItemHistory();
+
         listLayout = findViewById(R.id.listLayout);
         ConstraintLayout emptyText = findViewById(R.id.emptyText);
         items = getItemList();
@@ -66,48 +58,23 @@ public class TodayActivity extends ActivityShowList {
             emptyText.findViewById(R.id.emptyText);
             listLayout.addView(emptyText);
         }
-
         setMenuBtnOnClick();
-        setBackgroundAlarm();
+
+        // set alarm notification
+        MyReceiver alarm = new MyReceiver();
+        alarm.setAlarm(this);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setBackgroundAlarm() {
-        Intent intent1 = new Intent(this, MyReceiver.class);
-        intent1.setAction("com.example.myapplication.alarms");
-
-        Log.i("ii", "setBackgroundAlarm: " + LocalDateTime.now().toLocalTime().toString());
-        int time = 10; // second
-
-        Intent intent = new Intent(getApplicationContext(), TodayActivity.class);
-        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time * 1000, pi);
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setNotification() {
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("TASK_ALARM",
-                    "Task Alarm",
-                    NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("YOUR_NOTIFICATION_CHANNEL_DESCRIPTION");
-            mNotificationManager.createNotificationChannel(channel);
+    private void setItemHistory() {
+        List<Item> allAvailableItem = appDB.itemDao().getItemAllList(true);
+        for (Item item : allAvailableItem) {
+            if (DataManager.stringToLocalDate(item.getDate()).compareTo(LocalDate.now()) < 0) {
+                item.setAvailable(false);
+                appDB.itemDao().updateItem(item);
+            }
         }
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "TASK_ALARM")
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setSmallIcon(R.drawable.calendar) // notification icon
-                .setContentTitle("title") // title for notification
-                .setContentText("message")// message for notification
-                .setAutoCancel(true); // clear notification after click
-        Intent intent = new Intent(getApplicationContext(), TodayActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 1234, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(pi);
-        mNotificationManager.notify(0, mBuilder.build());
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -157,7 +124,7 @@ public class TodayActivity extends ActivityShowList {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public List<Item> getItemList() {
-        List<Item> items = appDB.itemDao().getItemTodayList(DataManager.dateTimeToString(LocalDateTime.now()), true);
+        List<Item> items = appDB.itemDao().getItemListByDate(DataManager.dateTimeToString(LocalDateTime.now()), true);
         items.sort(new DateComparator());
         return items;
     }

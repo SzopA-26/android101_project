@@ -13,11 +13,11 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <receiver
-            android:name=".MyReceiver"
-            android:enabled="true"
-            android:exported="true" />
 
+        <service
+            android:name="com.example.myapplication.service.AlarmService"
+            android:process=":remote" />
+        <receiver android:name="com.example.myapplication.service.MyReceiver" android:process=":remote" />
 
         <activity android:name=".EditActivity" />
         <activity android:name=".HistoryActivity" />

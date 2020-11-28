@@ -28,6 +28,8 @@ public class Item {
     private boolean isSuccess;
     @ColumnInfo(name = "isAvailable")
     private boolean isAvailable;
+    @ColumnInfo(name = "isNoti")
+    private boolean isNoti;
 
     public Item() { }
 
@@ -38,6 +40,7 @@ public class Item {
         this.icon = icon;
         this.color = color;
         isAvailable = true;
+        isNoti = true;
     }
 
     public String getTime() {
@@ -129,6 +132,14 @@ public class Item {
         isAvailable = available;
     }
 
+    public boolean isNoti() {
+        return isNoti;
+    }
+
+    public void setNoti(boolean noti) {
+        isNoti = noti;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -139,7 +150,10 @@ public class Item {
                 ", end='" + end + '\'' +
                 ", icon=" + icon +
                 ", color=" + color +
+                ", comment='" + comment + '\'' +
+                ", isSuccess=" + isSuccess +
                 ", isAvailable=" + isAvailable +
+                ", isNoti=" + isNoti +
                 '}';
     }
 }

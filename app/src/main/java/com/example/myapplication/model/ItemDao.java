@@ -10,11 +10,12 @@ import java.util.List;
 
 @Dao
 public interface ItemDao {
-    @Query("select * from item where date = :today and isAvailable = :isAvailable")
-    List<Item> getItemTodayList(String today, boolean isAvailable);
 
-    @Query("select * from item where date = :today")
-    List<Item> getItemTodayList(String today);
+    @Query("select * from item where isSuccess = :isSuccess")
+    List<Item> getItemBySuccess(boolean isSuccess);
+
+    @Query("select * from item where date = :date and isAvailable = :isAvailable")
+    List<Item> getItemListByDate(String date, boolean isAvailable);
 
     @Query("select * from item where id = :id")
     Item getItemById(int id);

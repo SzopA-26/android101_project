@@ -162,6 +162,7 @@ public class EditActivity extends ActivityDetail {
                 item.setColor(selectedColor);
                 if (stIsSet) item.setStart(DataManager.getStringTime(stHour,stMin));
                 if (etIsSet) item.setEnd(DataManager.getStringTime(etHour,etMin));
+                item.setNoti(true);
 
                 appDB.itemDao().updateItem(item);
 

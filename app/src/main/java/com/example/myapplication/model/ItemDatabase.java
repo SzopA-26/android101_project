@@ -13,7 +13,10 @@ public abstract class ItemDatabase extends RoomDatabase {
 
     public static synchronized ItemDatabase getInstance(Context context) {
         if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(), ItemDatabase.class, DB_NAME).fallbackToDestructiveMigration().allowMainThreadQueries().build();
+            instance = Room.databaseBuilder(context.getApplicationContext(), ItemDatabase.class, DB_NAME)
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
+                    .build();
         }
         return instance;
     }
